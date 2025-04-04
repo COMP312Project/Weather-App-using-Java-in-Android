@@ -1,3 +1,4 @@
+//The data model to map JSON repsones from OpenWeatherMap
 public class WeatherResponse {
     @SerializedName("name")
     private String cityName;

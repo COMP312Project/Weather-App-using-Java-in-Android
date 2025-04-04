@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+
+// The Main Screen - Makes the API call and displays weather data on the UI
 public class MainActivity extends AppCompatActivity {
 
     String CITY = "dhaka,bd";
