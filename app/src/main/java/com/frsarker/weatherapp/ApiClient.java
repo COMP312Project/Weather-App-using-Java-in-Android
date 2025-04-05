@@ -10,15 +10,20 @@ public class ApiClient {
 
     public static Retrofit getClient() {
         if (retrofit == null) {
+            // Logging interceptor: prints HTTP request and response info to Logcat...
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingIntereptor.Level.BODY):
 
+            // Add the logging interceptor to the HTTP client...
             OkHttpClient client = new OKHttpClient.Builder()
                     .addInterceptor(logging)
                     .build();
 
+            // Build the Retrofit instance...
             retrofit = new Retrofit.Builder()
+                    // Base URL of the API
                     .baseUrl("https://api.openweathermap.org/data/2.5/")
+                    // Auto-converts JSON to Java objects
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

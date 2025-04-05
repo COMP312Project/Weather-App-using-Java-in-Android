@@ -51,6 +51,22 @@ public class WeatherResponse {
         }
     }
 
+    public class Weather {
+        @SerializedName("main")
+        private String main;
+
+        @SerializedName("description")
+        private String description;
+
+        private String getMain() {
+            return main;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
+
 
     public class Wind {
         @SerializedName("speed")
