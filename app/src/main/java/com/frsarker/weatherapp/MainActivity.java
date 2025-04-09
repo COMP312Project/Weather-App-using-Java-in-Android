@@ -18,16 +18,54 @@ import java.util.Locale;
 // The Main Screen - Makes the API call and displays weather data on the UI
 public class MainActivity extends AppCompatActivity {
 
+    private TextView cityNameTextView;
+    private TextView temperatureTextView;
+    private final String API_URL = "https://api.openweathermap.org/data/2.5/weather";
+    private final String API_KEY = "YOUR_API_KEY";
+
+    // Declare EditText and Button
+    private EditText searchCityEditText;
+    private Button searchButton;
+
+
     String CITY = "dhaka,bd";
     String API = "8118ed6ee68db2debfaaa5a44c832918";
 
     TextView addressTxt, updated_atTxt, statusTxt, tempTxt, temp_minTxt, temp_maxTxt, sunriseTxt,
             sunsetTxt, windTxt, pressureTxt, humidityTxt;
 
+    <EditText
+            android:id="id/searchCity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter city name"
+            android:inputType="text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/searchButton"
+            android:layout_marginEnd="8dp"/>
+
+    <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);  // This loads UI
+
+        // Step #1 - Bind views from the layout
+        cityNameTextView = findViewById(R.id.cityName);
+        temperatureTextView = findViewById(R.id.temperature);
+
+        searchCityEditText = findViewById(R.id.searchCity);
+        searchButton = findViewById(R.id.searchButton);
 
         addressTxt = findViewById(R.id.address);
         updated_atTxt = findViewById(R.id.updated_at);
@@ -43,7 +81,44 @@ public class MainActivity extends AppCompatActivity {
 
         new weatherTask().execute();
 
+        // Default city on launch...
+        fetchWeatherData("Chicago");
+
+        // Set up search...
+        searchButton.setOnClickListener(v ->) {
+            String city = searchCityEditText.getText().toString().trim();
+            if (!city.isEmpty()) {
+                fetchWeatherData(city);
+            }
+        });
     }
+
+        //Enter #6 - fetchWeatherData (07APR25)
+        private void fetchWeatherData(String cityName) {
+            WeatherApiService apiService = ApiClient.getClient().create(WeatherApiService.class);
+
+            Call<WeatherResponse> = call = apiService.getCurrent Weather(cityName, API_KEY, "metric");
+
+            call.enqueue(new Callback<WeatherResponse>() {
+                @Override
+                public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        // Update the UI here...
+                        cityNameTextView.setText(weather.getCityName());
+                        temperatureTextView.setText("Temperature: " + weather.getMain().getTemp() +  + "°C");
+                    }
+                }
+                @Override
+                public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }
+    }
+
+
+
+
 
 
     class weatherTask extends AsyncTask<String, Void, String> {
@@ -111,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.loader).setVisibility(View.GONE);
                 findViewById(R.id.errorText).setVisibility(View.VISIBLE);
             }
-
         }
     }
 }
