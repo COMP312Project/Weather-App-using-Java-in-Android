@@ -58,6 +58,9 @@ public class WeatherResponse {
         @SerializedName("description")
         private String description;
 
+        @SerializedName("icon")
+        public String icon;
+
         private String getMain() {
             return main;
         }

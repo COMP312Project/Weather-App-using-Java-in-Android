@@ -63,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
         // Step #1 - Bind views from the layout
         cityNameTextView = findViewById(R.id.cityName);
         temperatureTextView = findViewById(R.id.temperature);
+        humidityTextView = findViewById(R.id.textHumidity);
+        windTextView = findViewById(R.id.textWind);
+        descriptionTextView = findViewById(R.id.textDescription);
 
         searchCityEditText = findViewById(R.id.searchCity);
         searchButton = findViewById(R.id.searchButton);
@@ -92,6 +95,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    @Override
+    public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+        if (response.isSuccessful() && response.body() != null) {
+            WeatherResponse weather = response.body();
+
+            String temp = String.format(Locale.getDefault(), "%.1f°C", weather.main.temp - 273.15); // Kelvin to Celsisus
+            String humidity = "Humidity: " + weather.main.humidity + "%";
+            String windSpeed = "Wind: " + weather.wind.speed + " m/s";
+            String description = weather.weather.get(0).description;
+
+            // TextViews...
+            temperatureTextView.setText(temp);
+            humidityTextView.setText(humidity);
+            windTextView.setText(windSpeed);
+            descriptionTextView.setText(description);
+            cityNameTextView.setText(weather.cityName);
+        } else {
+            Toast.makeText(this, "Weather data not available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
         //Enter #6 - fetchWeatherData (07APR25)
         private void fetchWeatherData(String cityName) {
