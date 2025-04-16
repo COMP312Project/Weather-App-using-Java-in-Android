@@ -1,6 +1,9 @@
+package com.frsarker.weatherapp;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import com.frsarker.weatherapp.WeatherResponse;
 
 // Defines the Retrofit interface with endpoints (@GET methods) for fetching weather data
 public interface WeatherApiService {

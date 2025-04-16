@@ -1,3 +1,5 @@
+package com.frsarker.weatherapp;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import okhttp3.OkHttpClient;
@@ -12,10 +14,10 @@ public class ApiClient {
         if (retrofit == null) {
             // Logging interceptor: prints HTTP request and response info to Logcat...
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingIntereptor.Level.BODY):
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             // Add the logging interceptor to the HTTP client...
-            OkHttpClient client = new OKHttpClient.Builder()
+            OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(logging)
                     .build();
 

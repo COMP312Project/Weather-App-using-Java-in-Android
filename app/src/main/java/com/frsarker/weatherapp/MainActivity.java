@@ -5,7 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import com.frsarker.weatherapp.WeatherResponse;
+import com.frsarker.weatherapp.WeatherApiService;
+import com.frsarker.weatherapp.ApiClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView cityNameTextView;
     private TextView temperatureTextView;
+    private TextView humidityTextView;
+    private TextView windTextView;
+    private TextView descriptionTextView;
     private final String API_URL = "https://api.openweathermap.org/data/2.5/weather";
     private final String API_KEY = "YOUR_API_KEY";
 
@@ -34,24 +47,9 @@ public class MainActivity extends AppCompatActivity {
     TextView addressTxt, updated_atTxt, statusTxt, tempTxt, temp_minTxt, temp_maxTxt, sunriseTxt,
             sunsetTxt, windTxt, pressureTxt, humidityTxt;
 
-    <EditText
-            android:id="id/searchCity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Enter city name"
-            android:inputType="text"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/searchButton"
-            android:layout_marginEnd="8dp"/>
 
-    <Button
-            android:id="@+id/searchButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+
+
 
 
 
@@ -62,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Step #1 - Bind views from the layout
         cityNameTextView = findViewById(R.id.cityName);
-        temperatureTextView = findViewById(R.id.temperature);
-        humidityTextView = findViewById(R.id.textHumidity);
-        windTextView = findViewById(R.id.textWind);
+        temperatureTextView = findViewById(R.id.temp);
+        humidityTextView = findViewById(R.id.humidity);
+        windTextView = findViewById(R.id.wind);
         descriptionTextView = findViewById(R.id.textDescription);
 
         searchCityEditText = findViewById(R.id.searchCity);
@@ -88,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         fetchWeatherData("Chicago");
 
         // Set up search...
-        searchButton.setOnClickListener(v ->) {
+        searchButton.setOnClickListener(v -> {
             String city = searchCityEditText.getText().toString().trim();
             if (!city.isEmpty()) {
                 fetchWeatherData(city);
@@ -97,26 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-        if (response.isSuccessful() && response.body() != null) {
-            WeatherResponse weather = response.body();
 
-            String temp = String.format(Locale.getDefault(), "%.1f°C", weather.main.temp - 273.15); // Kelvin to Celsisus
-            String humidity = "Humidity: " + weather.main.humidity + "%";
-            String windSpeed = "Wind: " + weather.wind.speed + " m/s";
-            String description = weather.weather.get(0).description;
-
-            // TextViews...
-            temperatureTextView.setText(temp);
-            humidityTextView.setText(humidity);
-            windTextView.setText(windSpeed);
-            descriptionTextView.setText(description);
-            cityNameTextView.setText(weather.cityName);
-        } else {
-            Toast.makeText(this, "Weather data not available", Toast.LENGTH_SHORT).show();
-        }
-    }
 
 
 
@@ -124,15 +103,16 @@ public class MainActivity extends AppCompatActivity {
         private void fetchWeatherData(String cityName) {
             WeatherApiService apiService = ApiClient.getClient().create(WeatherApiService.class);
 
-            Call<WeatherResponse> = call = apiService.getCurrent Weather(cityName, API_KEY, "metric");
+            Call<WeatherResponse> call = apiService.getCurrentWeather(cityName, API_KEY, "metric");
 
             call.enqueue(new Callback<WeatherResponse>() {
                 @Override
                 public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         // Update the UI here...
+                        WeatherResponse weather = response.body();
                         cityNameTextView.setText(weather.getCityName());
-                        temperatureTextView.setText("Temperature: " + weather.getMain().getTemp() +  + "°C");
+                        temperatureTextView.setText("Temperature: " + weather.getMain().getTemp() + "°C");
                     }
                 }
                 @Override
@@ -215,4 +195,3 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-}

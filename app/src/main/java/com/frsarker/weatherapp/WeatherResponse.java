@@ -1,3 +1,9 @@
+package com.frsarker.weatherapp;
+
+import com.google.gson.annotations.SerializedName;
+import java.util.List;
+
+
 //The data model to map JSON repsones from OpenWeatherMap
 public class WeatherResponse {
     @SerializedName("name")
