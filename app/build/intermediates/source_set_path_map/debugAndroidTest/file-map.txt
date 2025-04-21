@@ -1,0 +1,6 @@
+com.frsarker.weatherapp.test.app-jetified-annotation-experimental-1.3.0-0 /Users/andrewrowe/.gradle/caches/transforms-3/02540405b6dcd13917dafd35c41b8951/transformed/jetified-annotation-experimental-1.3.0/res
+com.frsarker.weatherapp.test.app-jetified-core-1.5.0-1 /Users/andrewrowe/.gradle/caches/transforms-3/4bb235660fbfda08de8515b4c47d157e/transformed/jetified-core-1.5.0/res
+com.frsarker.weatherapp.test.app-androidTest-2 /Users/andrewrowe/Documents/GitHub/Weather-App-using-Java-in-Android/app/build/generated/res/resValues/androidTest/debug
+com.frsarker.weatherapp.test.app-mergeDebugAndroidTestResources-3 /Users/andrewrowe/Documents/GitHub/Weather-App-using-Java-in-Android/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
+com.frsarker.weatherapp.test.app-mergeDebugAndroidTestResources-4 /Users/andrewrowe/Documents/GitHub/Weather-App-using-Java-in-Android/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
+com.frsarker.weatherapp.test.app-merged_res-5 /Users/andrewrowe/Documents/GitHub/Weather-App-using-Java-in-Android/app/build/intermediates/merged_res/debugAndroidTest
