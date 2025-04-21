@@ -1,5 +1,6 @@
 package com.frsarker.weatherapp;
 
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.AsyncTask;
@@ -41,16 +42,11 @@ public class MainActivity extends AppCompatActivity {
     private Button searchButton;
 
 
-    String CITY = "dhaka,bd";
+    String CITY = "dhaka,bdtest";
     String API = "8118ed6ee68db2debfaaa5a44c832918";
 
     TextView addressTxt, updated_atTxt, statusTxt, tempTxt, temp_minTxt, temp_maxTxt, sunriseTxt,
             sunsetTxt, windTxt, pressureTxt, humidityTxt;
-
-
-
-
-
 
 
     @Override
@@ -80,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         pressureTxt = findViewById(R.id.pressure);
         humidityTxt = findViewById(R.id.humidity);
 
-        new weatherTask().execute();
+        new weatherTask(MainActivity.this, CITY, API).execute();
 
         // Default city on launch...
         fetchWeatherData("Chicago");
@@ -89,58 +85,99 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(v -> {
             String city = searchCityEditText.getText().toString().trim();
             if (!city.isEmpty()) {
+                //Debugging Toast - Confirm if the click is being registered & city is being passed...
+                Toast.makeText(this, "Searching for: " + city, Toast.LENGTH_SHORT).show();
                 fetchWeatherData(city);
             }
         });
     }
 
 
+    //Enter #6 - fetchWeatherData (07APR25)
+    private void fetchWeatherData(String cityName) {
+        WeatherApiService apiService = ApiClient.getClient().create(WeatherApiService.class);
 
+        Call<WeatherResponse> call = apiService.getCurrentWeather(cityName, API_KEY, "metric");
 
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Update the UI here...
+                    WeatherResponse weather = response.body();
+                    // Extract data from the response...
+                    String address = weather.getCityName();
+                    String updatedAt = "Updated just now";
+                    String temp = String.format(Locale.getDefault(), "%.1f°C", weather.getMain().getTemp());
+                    String tempMin = "Min Temp: N/A";
+                    String tempMax = "Max Temp: N/A";
+                    String wind = String.format(Locale.getDefault(), "%.1f m/s", weather.getWind().getSpeed());
 
+                    String humidity = weather.getMain().getHumidity() + "%";
+                    String weatherDescription = weather.getWeather().get(0).getDescription();
 
-        //Enter #6 - fetchWeatherData (07APR25)
-        private void fetchWeatherData(String cityName) {
-            WeatherApiService apiService = ApiClient.getClient().create(WeatherApiService.class);
+                    // Update the UI
+                    updateWeatherUI(address, updatedAt, weatherDescription, temp, tempMin, tempMax, sunrise, sunset,
+                            wind, pressure, humidity);
+                } else {
+                    Toast.makeText(MainActivity.this, "City not found!", Toast.LENGTH_SHORT).show();
 
-            Call<WeatherResponse> call = apiService.getCurrentWeather(cityName, API_KEY, "metric");
-
-            call.enqueue(new Callback<WeatherResponse>() {
-                @Override
-                public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        // Update the UI here...
-                        WeatherResponse weather = response.body();
-                        cityNameTextView.setText(weather.getCityName());
-                        temperatureTextView.setText("Temperature: " + weather.getMain().getTemp() + "°C");
-                    }
+                    /** Not Yet sure If I will use this yet...
+                    // cityNameTextView.setText(weather.getCityName());
+                    // temperatureTextView.setText("Temperature: " + weather.getMain().getTemp() + "°C"); **/
                 }
-                @Override
-                public void onFailure(Call<WeatherResponse> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-        }
+            }
+
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Network error!", Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
     }
 
 
-
-
+    public void updateWeatherUI(String address, String updatedAt, String description, String temp, String tempMin,
+                                String tempMax, String sunrise, String sunset, String wind, String pressure, String
+                                        humidity) {
+        addressTxt.setText(address);
+        updated_atTxt.setText(updatedAt);
+        statusTxt.setText(description.toUpperCase());
+        tempTxt.setText(temp);
+        temp_minTxt.setText(tempMin);
+        temp_maxTxt.setText(tempMax);
+        sunriseTxt.setText(sunrise);
+        sunsetTxt.setText(sunset);
+        windTxt.setText(wind);
+        pressureTxt.setText(pressure);
+        humidityTxt.setText(humidity);
+    }
 
 
     class weatherTask extends AsyncTask<String, Void, String> {
+        private MainActivity activity;
+        private String city;
+        private String apiKey;
+
+        public weatherTask(MainActivity activity, String city, String apiKey) {
+            this.activity = activity;
+            this.city = city;
+            this.apiKey = apiKey;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
             /* Showing the ProgressBar, Making the main design GONE */
-            findViewById(R.id.loader).setVisibility(View.VISIBLE);
-            findViewById(R.id.mainContainer).setVisibility(View.GONE);
-            findViewById(R.id.errorText).setVisibility(View.GONE);
+            activity.findViewById(R.id.loader).setVisibility(View.VISIBLE);
+            activity.findViewById(R.id.mainContainer).setVisibility(View.GONE);
+            activity.findViewById(R.id.errorText).setVisibility(View.GONE);
         }
 
+        @Override
         protected String doInBackground(String... args) {
-            String response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?q=" + CITY + "&units=metric&appid=" + API);
+            String response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + apiKey);
             return response;
         }
 
@@ -165,33 +202,27 @@ public class MainActivity extends AppCompatActivity {
 
                 Long sunrise = sys.getLong("sunrise");
                 Long sunset = sys.getLong("sunset");
+
+                String sunriseFormatted = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date(sunrise * 1000));
+                String sunsetFormatted = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date(sunset * 1000));
+
                 String windSpeed = wind.getString("speed");
                 String weatherDescription = weather.getString("description");
 
                 String address = jsonObj.getString("name") + ", " + sys.getString("country");
 
-
-                /* Populating extracted data into our views */
-                addressTxt.setText(address);
-                updated_atTxt.setText(updatedAtText);
-                statusTxt.setText(weatherDescription.toUpperCase());
-                tempTxt.setText(temp);
-                temp_minTxt.setText(tempMin);
-                temp_maxTxt.setText(tempMax);
-                sunriseTxt.setText(new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date(sunrise * 1000)));
-                sunsetTxt.setText(new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date(sunset * 1000)));
-                windTxt.setText(windSpeed);
-                pressureTxt.setText(pressure);
-                humidityTxt.setText(humidity);
+                // Call UI update method()...
+                activity.updateWeatherUI(address, updatedAtText, weatherDescription, temp, tempMin, tempMax,
+                        sunriseFormatted, sunsetFormatted, windSpeed, pressure, humidity);
 
                 /* Views populated, Hiding the loader, Showing the main design */
-                findViewById(R.id.loader).setVisibility(View.GONE);
-                findViewById(R.id.mainContainer).setVisibility(View.VISIBLE);
-
+                activity.findViewById(R.id.loader).setVisibility(View.GONE);
+                activity.findViewById(R.id.mainContainer).setVisibility(View.VISIBLE);
 
             } catch (JSONException e) {
-                findViewById(R.id.loader).setVisibility(View.GONE);
-                findViewById(R.id.errorText).setVisibility(View.VISIBLE);
+                activity.findViewById(R.id.loader).setVisibility(View.GONE);
+                activity.findViewById(R.id.errorText).setVisibility(View.VISIBLE);
             }
         }
     }
+}
