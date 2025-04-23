@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 
-// This class sets up and provides the Retrofit client instance with logging
+// This class sets up and provides the Retrofit client instance with logging...
 public class ApiClient {
     private static Retrofit retrofit = null;
 
