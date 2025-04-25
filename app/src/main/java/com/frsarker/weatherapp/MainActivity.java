@@ -15,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.frsarker.weatherapp.BuildConfig;
 import com.frsarker.weatherapp.WeatherResponse;
 import com.frsarker.weatherapp.WeatherApiService;
 import com.frsarker.weatherapp.ApiClient;
@@ -27,13 +28,14 @@ import java.util.Date;
 import java.util.Locale;
 
 
-// The Main Screen - Makes the API call and displays weather data on the UI
+// The Main Screen - Makes the API call and displays weather data on the UI...
 public class MainActivity extends AppCompatActivity {
 
     private final String API_URL = "https://api.openweathermap.org/data/2.5/weather";
-    private final String API_KEY = "663484fe3560c9ab323dce14009b0db5";
 
-    // Declare EditText and Button
+    private final String API_KEY = BuildConfig.WEATHER_API_KEY;
+
+    // Declare EditText and Button...
     private EditText searchCityEditText;
     private Button searchButton;
 
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
      protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("DEBUG", "onCreate: Started");
-        setContentView(R.layout.activity_main);  // This loads UI
+        setContentView(R.layout.activity_main);  // This loads UI...
         Log.d("DEBUG", "setContentView: End");
 
          // Initialize your EditText and Button views...
@@ -54,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         searchButton = findViewById(R.id.searchButton);
         Log.d("DEBUG", "searchButton: End");
 
-        // Bind views from the layout...
-         addressTxt = findViewById(R.id.address);
+         // Bind views from the layout...
+        addressTxt = findViewById(R.id.address);
         updated_atTxt = findViewById(R.id.updated_at);
         statusTxt = findViewById(R.id.status);
         tempTxt = findViewById(R.id.temp);
@@ -76,14 +78,14 @@ public class MainActivity extends AppCompatActivity {
         searchButton = findViewById(R.id.searchButton);
 
         searchButton.setOnClickListener(v -> {
-            Log.d("BUTTON", "CLICKED");
-            Toast.makeText(this, "Button clicked", Toast.LENGTH_SHORT).show();
+            Log.d("BUTTON", "CLICKED");      // Shows in Logcat
+            Toast.makeText(this, "Button clicked", Toast.LENGTH_SHORT).show();  // Shows in GUI
 
 
             String city = searchCityEditText.getText().toString().trim();
                 if (!city.isEmpty()) {
                     //Debugging Toast - Confirm if the click is being registered & city is being passed...
-                    Toast.makeText(this, "Search for: " + city, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Search for: " + city, Toast.LENGTH_SHORT).show();   // Shows in GUI
                     fetchWeatherData(city);
                 }
             });
@@ -103,8 +105,10 @@ public class MainActivity extends AppCompatActivity {
                         WeatherResponse weather = response.body();
 
                         // Logs for Debugging...
-                        Log.d("WEATHER_RESPONSE", "City: " + weather.getCityName());
-                        Log.d("WEATHER_RESPONSE", "Temp: " + weather.getMain().getTemp());
+                        Log.d("WEATHER_RESPONSE", "City: " + weather.getCityName());          // Shows in Logcat
+                        Log.d("WEATHER_RESPONSE", "Temp: " + weather.getMain().getTemp());    // Shows in Logcat
+                        Log.d("WEATHER_RESPONSE", "Min: " + weather.getMain().getTempMin());
+                        Log.d("WEATHER_RESPONSE", "Max: " + weather.getMain().getTempMax());
 
                         // Extract data from the response...
                         String address = weather.getCityName() + "," + weather.getSys().getCountry();
@@ -126,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
 
                         String weatherDescription = weather.getWeather().get(0).getDescription();
 
-                         Log.d("WEATHER_RESPONSE", "Calling updateWeatherUI...");
-                         updateWeatherUI(address, updatedAt, weatherDescription, temp, tempMin, tempMax, sunrise,
-                                 sunset, wind, pressure, humidity);
+                        Log.d("WEATHER_RESPONSE", "Calling updateWeatherUI...");        // Shows in Logcat
+                        updateWeatherUI(address, updatedAt, weatherDescription, temp, tempMin, tempMax, sunrise,
+                                sunset, wind, pressure, humidity);
                         } else {
                             Toast.makeText(MainActivity.this, "City not found!", Toast.LENGTH_SHORT).show();
                     }
@@ -149,10 +153,10 @@ public class MainActivity extends AppCompatActivity {
         // Debug - Make sure it is visible...
         findViewById(R.id.mainContainer).setVisibility(View.VISIBLE);
         // Debug log - Toast...
-        Toast.makeText(this, "UI Updated!", Toast.LENGTH_SHORT).show();
-        Log.d("WEATHER_UI", "Updating UI with fetched weather data");
-        Toast.makeText(this, "UI updated for: " + address, Toast.LENGTH_LONG).show();
-        Log.d("WEATHER_UI", "UI updated for: " + address);
+        Toast.makeText(this, "UI Updated!", Toast.LENGTH_SHORT).show();                  // Shows in GUI
+        Log.d("WEATHER_UI", "Updating UI with fetched weather data");                       // Shows in Logcat
+        Toast.makeText(this, "UI updated for: " + address, Toast.LENGTH_LONG).show();    // Shows in GUI
+        Log.d("WEATHER_UI", "UI updated for: " + address);                                  // Shows in Logcat
         addressTxt.setText(address);
         updated_atTxt.setText(updatedAt);
         statusTxt.setText(weatherDescription.toUpperCase());

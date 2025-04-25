@@ -2,6 +2,11 @@ plugins {
     id 'com.android.application'
 }
 
+// Read from local.properties to hide API Key...
+def WEATHER_API_KEY = project.rootProject.file("local.properties").readLines()
+        .find { it.startsWith("WEATHER_API_KEY") }
+        ?.split("=")[1]
+
 android {
     namespace 'com.frsarker.weatherapp'  // <-- use your app's actual namespace here
     compileSdk 33
@@ -14,6 +19,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "Weather_API_KEY", "\"${WEATHER_API_KEY}\""
     }
 
     buildTypes {
@@ -35,6 +42,11 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
+    }
+
+    defaultConfig {
+        buildConfigField "String", "WEATHER_API_KEY", "\"${WEATHER_API_KEY}\""
     }
 }
 
