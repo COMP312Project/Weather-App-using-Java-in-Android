@@ -47,14 +47,14 @@ public class MainActivity extends AppCompatActivity {
      @Override
      protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("DEBUG", "onCreate: Started");
+        Log.d("DEBUG", "onCreate: Started");      // Shows in Logcat
         setContentView(R.layout.activity_main);  // This loads UI...
-        Log.d("DEBUG", "setContentView: End");
+        Log.d("DEBUG", "setContentView: End");   // Shows in Logcat
 
          // Initialize your EditText and Button views...
         searchCityEditText = findViewById(R.id.searchCity);
         searchButton = findViewById(R.id.searchButton);
-        Log.d("DEBUG", "searchButton: End");
+        Log.d("DEBUG", "searchButton: End");     // Shows in Logcat
 
          // Bind views from the layout...
         addressTxt = findViewById(R.id.address);
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         pressureTxt = findViewById(R.id.pressure);
         humidityTxt = findViewById(R.id.humidity);
 
-        Log.d("DEBUG", "findViewById: End");
+        Log.d("DEBUG", "findViewById: End");     // Shows in Logcat
 
         // Default city on launch...
         fetchWeatherData("Chicago");
@@ -93,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
 
         private void fetchWeatherData(String cityName) {
             WeatherApiService apiService = ApiClient.getClient().create(WeatherApiService.class);
-
+            // Logs for Debugging...
+            Log.d("API_CHECK", "Using API key: " + API_KEY);    // Shows in Logcat
+            Log.d("API_CHECK", "City: " + cityName);            // Shows in Logcat
             Call<WeatherResponse> call = apiService.getCurrentWeather(cityName, API_KEY, "metric");
 
             call.enqueue(new Callback<WeatherResponse>() {
@@ -107,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
                         // Logs for Debugging...
                         Log.d("WEATHER_RESPONSE", "City: " + weather.getCityName());          // Shows in Logcat
                         Log.d("WEATHER_RESPONSE", "Temp: " + weather.getMain().getTemp());    // Shows in Logcat
-                        Log.d("WEATHER_RESPONSE", "Min: " + weather.getMain().getTempMin());
-                        Log.d("WEATHER_RESPONSE", "Max: " + weather.getMain().getTempMax());
+                        Log.d("WEATHER_RESPONSE", "Min: " + weather.getMain().getTempMin());  // Shows in Logcat
+                        Log.d("WEATHER_RESPONSE", "Max: " + weather.getMain().getTempMax());  // Shows in Logcat
 
                         // Extract data from the response...
                         String address = weather.getCityName() + "," + weather.getSys().getCountry();
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         updateWeatherUI(address, updatedAt, weatherDescription, temp, tempMin, tempMax, sunrise,
                                 sunset, wind, pressure, humidity);
                         } else {
-                            Toast.makeText(MainActivity.this, "City not found!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "City not found!", Toast.LENGTH_SHORT).show();    // Shows in GUI
                     }
             }
             @Override
