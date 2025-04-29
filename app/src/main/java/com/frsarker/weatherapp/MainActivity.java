@@ -25,22 +25,39 @@ import java.util.Date;
 import java.util.Locale;
 
 
-// The Main Screen - Makes the API call and displays weather data on the UI...
+/**
+ * MainActivity is the main screen of the Weather App
+ *
+ * It allows users to:
+ *    - Search for a city
+ *    - Fetch real-time weather data from OpenWeatherMap API
+ *    - Display detailed weather information (temperature, humidity, etc.)
+ *    - Dynamically change the background based on current weather conditions
+ */
 public class MainActivity extends AppCompatActivity {
+    // API endpoint base URL for weather data
     private final String API_URL = "https://api.openweathermap.org/data/2.5/weather";
+    // API key, stored securely in BuildConfig
     private final String API_KEY = BuildConfig.WEATHER_API_KEY;
-    // Declare EditText and Button...
+    // UI elements for user input
     private EditText searchCityEditText;
     private Button searchButton;
 
+    // UI elements for displaying weather data
     TextView addressTxt, updated_atTxt, statusTxt, tempTxt, temp_minTxt, temp_maxTxt, sunriseTxt,
             sunsetTxt, windTxt, pressureTxt, humidityTxt;
 
+
+    /**
+     * Initializes the app when activity is created.
+     * Sets up UI components, binds views and fetches default city weather ("Chicago").
+     *
+     */
      @Override
      protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("DEBUG", "onCreate: Started");      // Shows in Logcat
-        setContentView(R.layout.activity_main);  // This loads UI...
+        setContentView(R.layout.activity_main);             // This loads UI...
         Log.d("DEBUG", "setContentView: End");    // Shows in Logcat
 
          // Initialize your EditText and Button views...
@@ -60,19 +77,18 @@ public class MainActivity extends AppCompatActivity {
         windTxt = findViewById(R.id.wind);
         pressureTxt = findViewById(R.id.pressure);
         humidityTxt = findViewById(R.id.humidity);
-
         Log.d("DEBUG", "findViewById: End");     // Shows in Logcat
 
-        // Default city on launch...
+        // Set default city weather when app launches...
         fetchWeatherData("Chicago");
 
         // Set up search...
         searchButton = findViewById(R.id.searchButton);
 
+        // Set up search button click listener...
         searchButton.setOnClickListener(v -> {
             Log.d("BUTTON", "CLICKED");      // Shows in Logcat
             Toast.makeText(this, "Button clicked", Toast.LENGTH_SHORT).show();  // Shows in GUI
-
 
             String city = searchCityEditText.getText().toString().trim();
                 if (!city.isEmpty()) {
@@ -83,7 +99,13 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        private void fetchWeatherData(String cityName) {
+
+    /**
+     * Makes an asynchronous API call to fetch current weather data for the specified city using Retrofit.
+     *
+     * @param cityName Name of the city to retrieve weather information for...
+     */
+    private void fetchWeatherData(String cityName) {
             WeatherApiService apiService = ApiClient.getClient().create(WeatherApiService.class);
             // Logs for Debugging...
             Log.d("API_CHECK", "Using API key: " + API_KEY);    // Shows in Logcat
@@ -117,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                          float tempMinFahrenheit = (tempMinCelsius * 9 / 5) - 32;
                          float tempMaxFahrenheit = (tempMaxCelsius * 9 / 5) + 32;
 
-                        // Format the temperatures...
+                        // Format and extract weather data for UI update...
                         String temp = String.format(Locale.getDefault(), "%.1f°F", tempFahrenheit);
                         String tempMin = "Min Temperature: " + String.format(Locale.getDefault(), "%.1f°F", tempMinFahrenheit);
                         String tempMax = "Max Temperature: " + String.format(Locale.getDefault(), "%.1f°F", tempMaxFahrenheit);
@@ -148,6 +170,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Update the UI elements with fetched and formatted weather data.
+     * Also triggers dynamic background color updates based on the weather condition.
+     *
+     * @param address address City and country
+     * @param updatedAt Update timestamp
+     * @param weatherDescription Weather description (clear, rain, cloudy, etc.)
+     * @param temp Current temperature
+     * @param tempMin Minimum temperature
+     * @param tempMax Maximum temperature
+     * @param sunrise Sunrise time
+     * @param sunset Sunset time
+     * @param wind Wind speed
+     * @param pressure Atmospheric pressure
+     * @param humidity Humidity percentage
+     */
     public void updateWeatherUI(String address, String updatedAt, String weatherDescription, String temp, String tempMin,
                                 String tempMax, String sunrise, String sunset, String wind, String pressure, String
                                         humidity) {
@@ -175,7 +213,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // This method() will change the GUI screen background color...
+    /**
+     * Dynamically changes teh screen background color based on the current weather description.
+     *
+     * @param weatherDescription Current weather condition (e.g., clear, clouds, rain)
+     */
     public void setDynamicBackground(String weatherDescription) {
         RelativeLayout mainContainer = findViewById(R.id.mainContainer);
 
@@ -183,22 +225,28 @@ public class MainActivity extends AppCompatActivity {
         int textColor = getResources().getColor(android.R.color.black);                                  // Default to black text
 
         if (weatherDescription.contains("clear")) {
+            // Change background and text color based on weather condition...
             mainContainer.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));  // Light Blue...
             Log.d("WEATHER_UI", "Changing background color to: Light Blue");
             textColor = getResources().getColor(android.R.color.white);
         } else if (weatherDescription.contains("clouds")) {
+            // Change background and text color based on weather condition...
             mainContainer.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));      // Gray for Clouds...
             textColor = getResources().getColor(android.R.color.white);
         } else if (weatherDescription.contains("rain")) {
+            // Change background and text color based on weather condition...
             mainContainer.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));   // Dark Blue for Rain...
             textColor = getResources().getColor(android.R.color.white);
         } else if (weatherDescription.contains("snow")) {
+            // Change background and text color based on weather condition...
             mainContainer.setBackgroundColor(getResources().getColor(android.R.color.white));            // White for Snow...
             textColor = getResources().getColor(android.R.color.black);
         } else if (weatherDescription.contains("thunderstorm")) {
+            // Change background and text color based on weather condition...
             mainContainer.setBackgroundColor(getResources().getColor(android.R.color.black));            // Dark for Storm...
             textColor = getResources().getColor(android.R.color.white);
         } else {
+            // Change background and text color based on weather condition...
             mainContainer.setBackgroundColor(getResources().getColor(android.R.color.background_light)); // Default light...
             textColor = getResources().getColor(android.R.color.black);
         }
@@ -211,6 +259,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("WEATHER_UI", "Changing background color...");                                   // Shows in Logcat
     }
 
+
+    /**
+     * Applies a specified text color to all weather-related Textviews.
+     *
+     * @param Color The color to apply to text elements.
+     */
     private void applyTextColor(int Color) {
          addressTxt.setTextColor(Color);
          updated_atTxt.setTextColor(Color);
