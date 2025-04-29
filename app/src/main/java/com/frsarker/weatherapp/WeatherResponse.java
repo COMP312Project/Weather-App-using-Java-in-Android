@@ -105,7 +105,7 @@ public class WeatherResponse {
     }
 
     public class Weather {
-        @SerializedName("main")
+        @SerializedName ("main")
         private String main;
 
         @SerializedName("description")
