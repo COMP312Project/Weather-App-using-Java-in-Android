@@ -1,0 +1,10 @@
+/app/build/intermediates/incremental/debug-mergeJavaRes/zip-cache/0KVgBO7A0oIE02+yMnKUCKMTnbg=
+
+# Ignore build output
+/build/
+/app/build/
+/.gradle/
+/.idea/
+*.apk
+*.log
+*.tmp
