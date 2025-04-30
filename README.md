@@ -1,31 +1,41 @@
-# Weather-App-using-Java-in-Android
+# Weather App
+Our goal is to update a weather app (in Java) to show a 5-day forecast, search for weather by city, fetch weather data
+(temperature, humidity, wind speed, etc.), and provide severe weather alerts.
 
-<img  src='https://blog.frsarker.com/wp-content/uploads/2020/06/Weather-App-Design.jpg' >
-
-<br>
-<p>This project is on Creating an Android Weather App using Java.
-To get the weather information I used <a href="https://openweathermap.org" target="_blank">OpenWeatherMap</a> API. 
-Informations like Temperature, Pressure, Humidity, Weather status, Time of Sunrise and Sunset etc. are passed from the API.</p>
-<p>Visit the blog post on <a href="https://blog.frsarker.com/java/create-a-weather-app-using-java-in-android.html" target="_blank">
-<b>Create a Weather App using Java in Android</b>
-</a>
-</p>
+## Mission Statement
+Our mission is to collaboratively develop a weather app that enhances our understanding of open-source software 
+development. Through teamwork, experimentation, and real-world coding practices, we aim to create a functional and 
+user-friendly tool that serves as a learning resource for ourselves and our classmates.
 
 
-<br><h2>Get an API key from OpenWeatherMap</h2>
-<p>For retrieving data we will use <strong>OpenWeatherAPI</strong>, and we will be needing an API key for it. Before proceeding please get an API key by registering. You can either follow the attached video above or steps below.</p>
-<ol>
-<li>Create a New Account from <a title="Create new account" href="https://home.openweathermap.org/users/sign_up" target="_blank" rel="noopener">here</a>.</li>
-<li>After login go to <a title="Get the API key" href="https://home.openweathermap.org/api_keys" target="_blank" rel="noopener">here</a> to get the API Key.</li>
-</ol>
+## Project Contribution Summary
 
-<br><h2>Getting weather information using Latitude & Longitude</h2>
-<p>Suppose you want to request weather information using a <strong>Latitude</strong> &amp; <strong>Longitude</strong> of a place, then you should use:</p>
-<pre>String response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?lat=" + LAT + "&lon=" + LON + "&units=metric&appid=" + API);</pre>
-<p>where LAT and LON will be the Latitude &amp; Longitude respectively. If you want to implement this project to display weather
-information of user's current location you'll just need detect the current latitude &amp; longitude. I've already posted an article on 
-<a href="https://blog.frsarker.com/java/detect-current-latitude-and-longitude-using-java-in-android.html" target="_blank">
-Detect Current Latitude & Longitude using Java in Android
-</a>
-</p>
+For this project, we contributed to a pre-existing open-source weather app built with Java and Android. Our primary
+contributions focused on integrating an API key from OpenWeatherMap, making some improvements along with 
+documentation and improving code clarity for better maintainability.
 
+    - We updated the 'README.md' file by adding a mission statement that outlines the purpose of the app and our team's
+      learning goals.
+    - We commented key sections of the 'MainActivity.java' file to explain functionality, such as the API call process, 
+      user input handling and UI updates.
+    - We worked withing IntelliJ to edit and organize the project structure, ensuring that key files like 'README.md'
+      were accessible and properly formatted using Markdown.
+    - We explored syncing the local IntelliJ project with GitHub, but held off on pushing changes until all updates were
+      finalized since we were having problems snycing with GitHub.
+    - We contributed to "build.gradle (:app)" file by updating dependencies, JSON, Android Instrument Tesing using 
+      ChatGPT.
+    - We privatized our API key in local.properties so it does not sync with GitHub.
+    - We used ChatGPT in order for the app to obtain internet access (under AndroidManifest.xml - Line 4).
+    - ChatGPT was also used in order to understand what versions of Android Studio, IntelliJ and GitHub were needed for
+      our app to work.
+    - ApiClient.java was created in order for the App to obtain the weather data requested using Retrofit.
+    - Since this project was written in Java, but using Android Studio we used ChatGPT to understand how to debug using 
+      Toast and Logcat...for example, found in 'MainActivity.java'.  Java's println statements are not used in Android.
+      Our powerpoint presentation has the explaination on how we tested and debugged our app.
+
+
+## In Progress / Planned Changes
+
+    - Write code to obtain a 5-Day forecast and Sever weather alerts.
+    - We plan to sync all local changes with out GigHUb repositroy once development stablizes.
+    - We considered adding additional UI features like a 5-Day forecast but ran out of time.

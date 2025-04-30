@@ -7,7 +7,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 
-
 /**
  * ApiClient is responsible for creating and providing a Retrofit instance configured to communicate
  * with the Weather API.  It also sets up an OkHttpClient with logging for debugging purposes.
