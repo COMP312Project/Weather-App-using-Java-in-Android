@@ -29,6 +29,8 @@ documentation and improving code clarity for better maintainability.
     - ChatGPT was also used in order to understand what versions of Android Studio, IntelliJ and GitHub were needed for
       our app to work.
     - ApiClient.java was created in order for the App to obtain the weather data requested using Retrofit.
+    - We created the WeatherResponse.java class that is a data model that maps the JSON response from the OpenWeatherMap
+      API into Java objects using Gson.
     - Since this project was written in Java, but using Android Studio we used ChatGPT to understand how to debug using 
       Toast and Logcat...for example, found in 'MainActivity.java'.  Java's println statements are not used in Android.
       Our powerpoint presentation has the explaination on how we tested and debugged our app.
