@@ -1,10 +1,26 @@
 /app/build/intermediates/incremental/debug-mergeJavaRes/zip-cache/0KVgBO7A0oIE02+yMnKUCKMTnbg=
 
 # Ignore build output
-/build/
-/app/build/
-/.gradle/
-/.idea/
+# Android/Gradle build files
+.gradle/
+build/
+app/build/
+
+# IntelliJ/Android Studio
+.idea/
+*.iml
+
+# APKs
 *.apk
+
+# Logs and temp files
 *.log
+*.lock
+*.bin
 *.tmp
+
+# Local config
+local.properties
+
+# macOS system files
+.DS_Store
